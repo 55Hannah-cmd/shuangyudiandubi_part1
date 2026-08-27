@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>第一回 LP</title>
+    <style>
+      :root {
+        --page-width: 430px;
+        --panel: #fff9f1;
+        --cta: #d3a548;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { background: #eee8df; scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        background: #fff;
+        color: #28231e;
+        font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      }
+
+      main {
+        width: min(100%, var(--page-width));
+        height: 100svh;
+        margin: 0 auto;
+        background: #fff;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .lp-page {
+        height: 100%;
+        display: grid;
+        grid-template-rows: 82fr 18fr;
+        background: #fff;
+        opacity: 1;
+        transition: opacity 180ms ease;
+      }
+
+      .lp-page:not(.is-active) { display: none; }
+
+      .image-block {
+        min-height: 0;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .image-block img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .text-block {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: 1fr auto;
+        gap: 4px;
+        padding: 8px 10.5% 10px;
+        background: var(--panel);
+      }
+
+      /* These two empty areas are intentionally reserved for the copy and CTA supplied later. */
+      .copy-slot {
+        min-height: 1px;
+        display: grid;
+        place-content: center;
+        text-align: center;
+      }
+
+      .copy-slot p {
+        margin: 0;
+        font-size: clamp(17px, 4.6vw, 22px);
+        font-weight: 700;
+        line-height: 1.4;
+        letter-spacing: .02em;
+      }
+
+      .cta-slot {
+        height: clamp(46px, 6.2svh, 58px);
+        border: 0;
+        border-radius: 15px;
+        background: var(--cta);
+        color: #fff;
+        font: inherit;
+        font-size: clamp(17px, 4.5vw, 22px);
+        font-weight: 700;
+        cursor: default;
+      }
+
+      .cta-slot:focus-visible {
+        outline: 3px solid #3d3020;
+        outline-offset: 3px;
+      }
+
+      @media (min-width: 431px) {
+        body { padding-block: 20px; }
+        main { height: min(100svh - 40px, 900px); }
+      }
+    </style>
+  </head>
+  <body>
+    <main aria-label="第一回 LP">
+      <section class="lp-page is-active" aria-label="第一回・1ページ目">
+        <div class="image-block"><img src="assets/p1.png" alt="第一回 P1" /></div>
+        <div class="text-block">
+          <div class="copy-slot"><p>最近，什麼都想自己試試看。<br>那媽媽想給他看的呢？</p></div>
+          <button class="cta-slot" type="button" aria-label="看看結果">看看結果</button>
+        </div>
+      </section>
+      <section class="lp-page" aria-label="第一回・2ページ目">
+        <div class="image-block"><img src="assets/p2.png" alt="第一回 P2" /></div>
+        <div class="text-block"><div class="copy-slot"></div><button class="cta-slot" type="button" aria-label="CTA placeholder"></button></div>
+      </section>
+      <section class="lp-page" aria-label="第一回・3ページ目">
+        <div class="image-block"><img src="assets/p3.png" alt="第一回 P3" /></div>
+        <div class="text-block"><div class="copy-slot"></div><button class="cta-slot" type="button" aria-label="CTA placeholder"></button></div>
+      </section>
+      <section class="lp-page" aria-label="第一回・4ページ目">
+        <div class="image-block"><img src="assets/p4.png" alt="第一回 P4" /></div>
+        <div class="text-block"><div class="copy-slot"></div><button class="cta-slot" type="button" aria-label="CTA placeholder"></button></div>
+      </section>
+    </main>
+    <script>
+      const pages = [...document.querySelectorAll('.lp-page')];
+      const lp = document.querySelector('main');
+      let currentPage = 0;
+
+      function showNextPage() {
+        if (currentPage >= pages.length - 1) return;
+        pages[currentPage].classList.remove('is-active');
+        currentPage += 1;
+        pages[currentPage].classList.add('is-active');
+      }
+
+      lp.addEventListener('click', showNextPage);
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === 'ArrowRight' || event.key === ' ') {
+          event.preventDefault();
+          showNextPage();
+        }
+      });
+    </script>
+  </body>
+</html>
