@@ -272,7 +272,7 @@
 
       function updatePager() {
         pager.hidden = currentPage === 0;
-        nextButton.hidden = currentPage === pages.length - 1;
+        nextButton.hidden = currentPage === pages.length - 1 && p4TextBlock.classList.contains('is-cta-visible');
       }
 
       function resetP4Ctas() {
@@ -296,6 +296,12 @@
       }
 
       function showNextPage() {
+        if (currentPage === pages.length - 1 && !p4TextBlock.classList.contains('is-cta-visible')) {
+          window.clearTimeout(p4CtaTimer);
+          p4TextBlock.classList.add('is-cta-visible');
+          updatePager();
+          return;
+        }
         showPage(currentPage + 1);
       }
 
