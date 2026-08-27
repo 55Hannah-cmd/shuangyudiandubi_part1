@@ -29,7 +29,7 @@
         margin: 0 auto;
         background: #fff;
         overflow: hidden;
-        cursor: pointer;
+        cursor: default;
         position: relative;
       }
 
@@ -96,7 +96,7 @@
         font: inherit;
         font-size: clamp(17px, 4.5vw, 22px);
         font-weight: 700;
-        cursor: default;
+        cursor: pointer;
       }
 
       .cta-slot:focus-visible {
@@ -261,12 +261,11 @@
     </main>
     <script>
       const pages = [...document.querySelectorAll('.lp-page')];
-      const lp = document.querySelector('main');
       const pager = document.querySelector('.pager');
+      const firstPageCta = document.querySelector('.cta-slot');
       const previousButton = document.querySelector('.previous-page');
       const nextButton = document.querySelector('.next-page');
       const p4TextBlock = document.querySelector('.p4-text-block');
-      const p4Ctas = document.querySelector('.p4-ctas');
       let currentPage = 0;
       let p4CtaTimer;
 
@@ -309,25 +308,12 @@
         showPage(currentPage - 1);
       }
 
-      lp.addEventListener('click', showNextPage);
-      previousButton.addEventListener('click', (event) => {
-        event.stopPropagation();
+      firstPageCta.addEventListener('click', showNextPage);
+      previousButton.addEventListener('click', () => {
         showPreviousPage();
       });
-      nextButton.addEventListener('click', (event) => {
-        event.stopPropagation();
+      nextButton.addEventListener('click', () => {
         showNextPage();
-      });
-      p4Ctas.addEventListener('click', (event) => event.stopPropagation());
-      window.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') {
-          event.preventDefault();
-          showPreviousPage();
-        }
-        if (event.key === 'Enter' || event.key === 'ArrowRight' || event.key === ' ') {
-          event.preventDefault();
-          showNextPage();
-        }
       });
     </script>
   </body>
