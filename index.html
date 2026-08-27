@@ -71,7 +71,7 @@
 
       /* Keep P2–P4 copy and CTA clear of the fixed page-turn controls. */
       main .lp-page:not(:first-child) .text-block {
-        padding-right: calc(10.5% + 104px);
+        padding-right: calc(10.5% + 76px);
       }
 
       /* These two empty areas are intentionally reserved for the copy and CTA supplied later. */
@@ -84,10 +84,11 @@
 
       .copy-slot p {
         margin: 0;
-        font-size: clamp(17px, 4.6vw, 22px);
+        font-size: clamp(13px, 3.8vw, 18px);
         font-weight: 700;
         line-height: 1.4;
         letter-spacing: .02em;
+        white-space: nowrap;
       }
 
       .cta-slot {
@@ -109,24 +110,24 @@
 
       .pager {
         position: absolute;
-        right: 12px;
-        bottom: 10px;
+        right: 8px;
+        bottom: 8px;
         z-index: 2;
         display: flex;
-        gap: 8px;
+        gap: 5px;
         cursor: default;
       }
 
       .pager[hidden] { display: none; }
 
       .pager button {
-        width: 44px;
-        height: 44px;
+        width: 32px;
+        height: 32px;
         border: 1px solid #b98d3e;
         border-radius: 50%;
         background: #fffdf9;
         color: #7d5a23;
-        font-size: 28px;
+        font-size: 21px;
         line-height: 1;
         cursor: pointer;
       }
