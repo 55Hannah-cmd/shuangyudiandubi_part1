@@ -30,6 +30,7 @@
         background: #fff;
         overflow: hidden;
         cursor: pointer;
+        position: relative;
       }
 
       .lp-page {
@@ -67,6 +68,11 @@
         background: var(--panel);
       }
 
+      /* Keep P2–P4 copy and CTA clear of the fixed page-turn controls. */
+      main .lp-page:not(:first-child) .text-block {
+        padding-right: calc(10.5% + 104px);
+      }
+
       /* These two empty areas are intentionally reserved for the copy and CTA supplied later. */
       .copy-slot {
         min-height: 1px;
@@ -100,6 +106,37 @@
         outline-offset: 3px;
       }
 
+      .pager {
+        position: absolute;
+        right: 12px;
+        bottom: 10px;
+        z-index: 2;
+        display: flex;
+        gap: 8px;
+        cursor: default;
+      }
+
+      .pager[hidden] { display: none; }
+
+      .pager button {
+        width: 44px;
+        height: 44px;
+        border: 1px solid #b98d3e;
+        border-radius: 50%;
+        background: #fffdf9;
+        color: #7d5a23;
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .pager button:focus-visible {
+        outline: 3px solid #3d3020;
+        outline-offset: 3px;
+      }
+
+      .pager button[hidden] { display: none; }
+
       @media (min-width: 431px) {
         body { padding-block: 20px; }
         main { height: min(100svh - 40px, 900px); }
@@ -127,21 +164,54 @@
         <div class="image-block"><img src="assets/p4.png" alt="第一回 P4" /></div>
         <div class="text-block"><div class="copy-slot"></div><button class="cta-slot" type="button" aria-label="CTA placeholder"></button></div>
       </section>
+      <nav class="pager" aria-label="ページめくり" hidden>
+        <button class="previous-page" type="button" aria-label="前のページへ">‹</button>
+        <button class="next-page" type="button" aria-label="次のページへ">›</button>
+      </nav>
     </main>
     <script>
       const pages = [...document.querySelectorAll('.lp-page')];
       const lp = document.querySelector('main');
+      const pager = document.querySelector('.pager');
+      const previousButton = document.querySelector('.previous-page');
+      const nextButton = document.querySelector('.next-page');
       let currentPage = 0;
 
-      function showNextPage() {
-        if (currentPage >= pages.length - 1) return;
+      function updatePager() {
+        pager.hidden = currentPage === 0;
+        nextButton.hidden = currentPage === pages.length - 1;
+      }
+
+      function showPage(pageIndex) {
+        if (pageIndex < 0 || pageIndex >= pages.length || pageIndex === currentPage) return;
         pages[currentPage].classList.remove('is-active');
-        currentPage += 1;
+        currentPage = pageIndex;
         pages[currentPage].classList.add('is-active');
+        updatePager();
+      }
+
+      function showNextPage() {
+        showPage(currentPage + 1);
+      }
+
+      function showPreviousPage() {
+        showPage(currentPage - 1);
       }
 
       lp.addEventListener('click', showNextPage);
+      previousButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        showPreviousPage();
+      });
+      nextButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        showNextPage();
+      });
       window.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          showPreviousPage();
+        }
         if (event.key === 'Enter' || event.key === 'ArrowRight' || event.key === ' ') {
           event.preventDefault();
           showNextPage();
