@@ -139,6 +139,86 @@
 
       .pager button[hidden] { display: none; }
 
+      main .lp-page:not(:first-child) .p4-text-block {
+        display: block;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .p4-outro {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .p4-message,
+      .p4-ctas {
+        position: absolute;
+        inset: 0;
+        transition: transform 420ms ease, opacity 320ms ease;
+      }
+
+      .p4-message {
+        padding: 8px 10.5% 10px;
+      }
+
+      .p4-ctas {
+        display: grid;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        padding: 8px 12px 10px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(105%);
+      }
+
+      .p4-text-block.is-cta-visible .p4-message {
+        opacity: 0;
+        transform: translateX(-105%);
+      }
+
+      .p4-text-block.is-cta-visible .p4-ctas {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+      }
+
+      .p4-cta {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+        border-radius: 999px;
+        background: #f2bc54;
+        color: #2e2519;
+        font-size: clamp(15px, 4vw, 20px);
+        font-weight: 700;
+        line-height: 1.15;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .p4-cta:focus-visible {
+        outline: 3px solid #3d3020;
+        outline-offset: 3px;
+      }
+
+      .p4-cta--line { padding-inline: 50px 20px; }
+
+      .p4-cta--line img {
+        position: absolute;
+        left: 8px;
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .p4-message,
+        .p4-ctas { transition: none; }
+      }
+
       @media (min-width: 431px) {
         body { padding-block: 20px; }
         main { height: min(100svh - 40px, 900px); }
@@ -168,8 +248,14 @@
       </section>
       <section class="lp-page" aria-label="第一回・4ページ目">
         <div class="image-block"><img src="assets/p4.png" alt="第一回 P4" /></div>
-        <div class="text-block">
-          <div class="copy-slot"><p>不用急著叫他看這裡。<br>他看到哪裡，妳就陪他看到哪裡。<br>今天，這樣就很好。</p></div>
+        <div class="text-block p4-text-block">
+          <div class="p4-outro">
+            <div class="copy-slot p4-message"><p>不用急著叫他看這裡。<br>他看到哪裡，妳就陪他看到哪裡。<br>今天，這樣就很好。</p></div>
+            <div class="p4-ctas" aria-label="延伸選項">
+              <a class="p4-cta p4-cta--line" href="https://line.me/R/ti/p/@pby4339u" target="_blank" rel="noopener"><img src="assets/qiaohu-line.png" alt="" />請巧虎客服幫我找好康</a>
+              <a class="p4-cta" href="https://store.benesse.com.tw/products/%E5%B7%A7%E8%99%8E%E9%9B%99%E8%AA%9E%E9%BB%9E%E8%AE%80%E5%9C%96%E9%91%91?utm_source=line&amp;utm_medium=lp&amp;utm_campaign=X2-r1&amp;utm_content=cta_mall" target="_blank" rel="noopener">育兒便利店看完整商品</a>
+            </div>
+          </div>
         </div>
       </section>
       <nav class="pager" aria-label="ページめくり" hidden>
@@ -183,11 +269,25 @@
       const pager = document.querySelector('.pager');
       const previousButton = document.querySelector('.previous-page');
       const nextButton = document.querySelector('.next-page');
+      const p4TextBlock = document.querySelector('.p4-text-block');
+      const p4Ctas = document.querySelector('.p4-ctas');
       let currentPage = 0;
+      let p4CtaTimer;
 
       function updatePager() {
-        pager.hidden = currentPage === 0;
+        pager.hidden = currentPage === 0 || p4TextBlock.classList.contains('is-cta-visible');
         nextButton.hidden = currentPage === pages.length - 1;
+      }
+
+      function resetP4Ctas() {
+        window.clearTimeout(p4CtaTimer);
+        p4TextBlock.classList.remove('is-cta-visible');
+        if (currentPage === pages.length - 1) {
+          p4CtaTimer = window.setTimeout(() => {
+            p4TextBlock.classList.add('is-cta-visible');
+            updatePager();
+          }, 5000);
+        }
       }
 
       function showPage(pageIndex) {
@@ -195,6 +295,7 @@
         pages[currentPage].classList.remove('is-active');
         currentPage = pageIndex;
         pages[currentPage].classList.add('is-active');
+        resetP4Ctas();
         updatePager();
       }
 
@@ -215,6 +316,7 @@
         event.stopPropagation();
         showNextPage();
       });
+      p4Ctas.addEventListener('click', (event) => event.stopPropagation());
       window.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
           event.preventDefault();
